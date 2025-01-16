@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"
+    <title>Calculatrice TTC-TVA Fixe</title>
+    <style>
+        body {
+            font-family: Arial, sans serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            }
+            .container {
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0, 0.1);
+                width: 300px;
+                text-align: center;
+            }
+            h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+            label {
+                display: block;
+                margin-bottom: 10px;
+                font-weight: bold;
+                }
+            input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            .result {
+                margin-top: 20px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .receipt {
+                margin-top: 20px;
+                padding: 10px;
+                border: 1px #ccc;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                text-align: left;
+            }
+            .print-button {
+                margin-top: 20px;
+            }
+        </style>
+        </head>
+        <body> 
+            <div class="container">
+                <h1>Calculatrice TTC-TVA Fixe</h1>
+                <label for="prixHT">prixHT (FCFA) :</label>
+                <input type="number" id="prixHT" placeholder="Entrez le prix HT">
+                <label for="nombreArticles">Nombre d'articles :</label>
+                <input type="number" id="nombreArticles" placeholder="Entrez le nombre d'articles">
+                <button onclick="CalculerTTC()">Calculer</button>
+                <div class="result" id="resultat"></div>
+                <div class="receipt" id="receipt" style="display: none;">
+                    <h2>Reçu</h2>
+                    <p><strong> Prix HT :</strong> <span id="receiptHT"></span>FCFA</p> 
+                    <p><strong>Nombre d'articles :</strong> <span id="receiptNBR"></span></p>
+                    <p><strong>TVA (18%) :</strong> <span id="receiptTVA"></span>FCFA</p>
+                    <p><strong>Total TTC :</strong> <span id="receiptTTC"></span>FCFA</p>
+                </div>
+                    <button class="print-button" onclick="imprimerReçu()" style="display: none;">Imprimer le reçu</button>
+            </div>
+            <script>
+                function CalculerTTC() {
+                    // Récuperer les valeurs saisies
+                    const prixHT = parseFloat(document.getElementById('prixHT').value);
+                    const nombreArticles = parseFloat(document.getElementById('nombreArticles').value);
+                    //Taux TVA fixé à 18%
+                    const TVA = 18;
+                    // Validation des entrées
+                    if (isNaN(prixHT) || prixHT <= 0 ) {
+                        alert("Erreur : le prix HT doit être positif.");
+                        return;
+                        }
+                    if (isNaN(nombreArticles) || nombreArticles <= 0 ) {
+                        alert("Erreur : le nombre d'articles doit être positif.");
+                        return;
+                        }
+                    // Calcul du totalTTC
+                    const totalTTC= prixHT * nombreArticles * (1 + TVA / 100);
+                    // Afficher le résultat
+                    document.getElementById('resultat').innerText = `Total TTC : ${totalTTC.toFixed(2)} FCFA`;
+                    // Afficher le reçu
+                    document.getElementById('receiptHT').innerText = prixHT.toFixed(2);
+                    document.getElementById('receiptNBR').innerText = nombreArticles;
+                    document.getElementById('receiptTVA').innerText = (prixHT * nombreArticles * (TVA / 100)).toFixed(2);
+                    document.getElementById('receiptTTC').innerText = totalTTC.toFixed(2);
+                    document.getElementById('receipt').style.display = 'block'; 
+                    document.querySelector('.print-button').style.display = 'block';
+                    }
+                    function imprimerReçu() {
+                        // Imprimer le reçu
+                        const receiptContent = document.getElementById('receipt').innerHTML;
+                        const originalContent = document.body.innerHTML;
+                        document.body.innerHTML = receiptContent;
+                        window.print();
+                        document.body.innerHTML = originalContent;
+                        location.reload(); 
+                        // Recharger la pge pour restaurer l'interface
+                        }
+                    </script>
+             </body>
+             </html>
